@@ -3,7 +3,9 @@ import '../models/course.dart';
 import '../widgets/course_card.dart';
 import '../services/data_service.dart';
 import 'select_player_screen.dart';
-import 'total_statistics_screen.dart'; // Import the new screen
+import 'total_statistics_screen.dart';
+import 'tip_course_screen.dart';
+import 'about_screen.dart'; // Import the About screen
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -47,6 +49,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _navigateToTipCourseScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TipCourseScreen(),
+      ),
+    );
+  }
+
+  void _navigateToAboutScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AboutScreen(), // Navigate to the About screen
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.green, // Match the color with the theme
         actions: [
+          IconButton(
+            icon: Icon(Icons.lightbulb_outline, color: Colors.white),
+            onPressed: _navigateToTipCourseScreen,
+            tooltip: 'Tipsa om ny bana',
+          ),
           IconButton(
             icon: Icon(Icons.stacked_bar_chart, color: Colors.white),
             onPressed: _navigateToTotalStatistics,
@@ -79,6 +104,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToAboutScreen,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        tooltip: 'Om Bangolf Protokoll',
+        child: Icon(Icons.question_mark_outlined),
+      ),
     );
   }
 }
