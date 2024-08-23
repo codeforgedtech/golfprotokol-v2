@@ -193,16 +193,8 @@
       {"number": 6, "name": "Bana 6"},
       {"number": 7, "name": "Bana 7"},
       {"number": 8, "name": "Bana 8"},
-      {"number": 9, "name": "Bana 9"},
-      {"number": 10, "name": "Bana 10"},
-      {"number": 11, "name": "Bana 11"},
-      {"number": 12, "name": "Bana 12"},
-      {"number": 13, "name": "Bana 13"},
-      {"number": 14, "name": "Bana 14"},
-      {"number": 15, "name": "Bana 15"},
-      {"number": 16, "name": "Bana 16"},
-      {"number": 17, "name": "Bana 17"},
-      {"number": 18, "name": "Bana 18"}
+      {"number": 9, "name": "Bana 9"}
+
     ],
     "par":27
   }

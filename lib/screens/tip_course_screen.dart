@@ -20,6 +20,7 @@ class _TipCourseScreenState extends State<TipCourseScreen> {
       appBar: AppBar(
         title: Text('Tipsa om ny bana'),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

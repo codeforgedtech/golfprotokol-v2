@@ -15,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> _courses = [];
   bool _isLoading = true;
+  ScrollController _scrollController = ScrollController();
+  List<String> _alphabet = [];
 
   @override
   void initState() {
@@ -28,7 +30,19 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _courses = courses;
       _isLoading = false;
+      _alphabet = _generateAlphabet(courses);
     });
+  }
+
+  List<String> _generateAlphabet(List<Course> courses) {
+    Set<String> letters = {};
+    for (var course in courses) {
+      if (course.name.isNotEmpty) {
+        letters.add(course.name[0].toUpperCase());
+      }
+    }
+    List<String> sortedLetters = letters.toList()..sort();
+    return sortedLetters;
   }
 
   void _onCourseTap(Course course) {
@@ -67,6 +81,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _scrollToLetter(String letter) {
+    for (int i = 0; i < _courses.length; i++) {
+      if (_courses[i].name.isNotEmpty &&
+          _courses[i].name[0].toUpperCase() == letter) {
+        _scrollController.animateTo(
+          _scrollController.position.minScrollExtent +
+              i * 80.0, // Adjust multiplier based on item height
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,23 +116,55 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
+      body: Stack(
+        children: [
+          // Courses List
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 60.0), // Make room for the alphabet list
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _courses.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 16.0),
+                        child: CourseCard(
+                          course: _courses[index],
+                          onTap: () => _onCourseTap(_courses[index]),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          // Alphabet List
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              width: 50.0, // Width of the alphabet list
+              color: Colors.grey[200],
               child: ListView.builder(
-                itemCount: _courses.length,
+                padding: EdgeInsets.zero,
+                itemCount: _alphabet.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 16.0),
-                    child: CourseCard(
-                      course: _courses[index],
-                      onTap: () => _onCourseTap(_courses[index]),
+                  return ListTile(
+                    title: Text(
+                      _alphabet[index],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
+                    onTap: () => _scrollToLetter(_alphabet[index]),
                   );
                 },
               ),
             ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAboutScreen,
         backgroundColor: Colors.green,
