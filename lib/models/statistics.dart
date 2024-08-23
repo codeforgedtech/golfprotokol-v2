@@ -6,7 +6,7 @@ part 'statistics.g.dart';
 class Statistics {
   final String courseId;
   final String playerName;
-  final List<RoundStats> rounds;
+  List<RoundStats> rounds; // List should not be final if it's modified
 
   Statistics({
     required this.courseId,
@@ -14,6 +14,21 @@ class Statistics {
     required this.rounds,
   });
 
+  // Factory constructor for creating an instance of Statistics from JSON
+  factory Statistics.fromJson(Map<String, dynamic> json) => Statistics(
+        courseId: json['courseId'] as String? ??
+            '', // Hanterar null-värden och sätter ett tomt värde om null
+        playerName: json['playerName'] as String? ??
+            '', // Hanterar null-värden och sätter ett tomt värde om null
+        rounds: (json['rounds'] as List<dynamic>? ?? [])
+            .map((e) => RoundStats.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  // Convert Statistics instance to JSON
+  Map<String, dynamic> toJson() => _$StatisticsToJson(this);
+
+  // Modifierad addRound-metod
   void addRound(List<int> scores, int par) {
     int totalStrokes = scores.reduce((a, b) => a + b);
     int differenceFromPar = totalStrokes - par;
@@ -22,10 +37,6 @@ class Statistics {
       differenceFromPar: differenceFromPar,
     ));
   }
-
-  factory Statistics.fromJson(Map<String, dynamic> json) =>
-      _$StatisticsFromJson(json);
-  Map<String, dynamic> toJson() => _$StatisticsToJson(this);
 }
 
 @JsonSerializable()
@@ -38,7 +49,14 @@ class RoundStats {
     required this.differenceFromPar,
   });
 
-  factory RoundStats.fromJson(Map<String, dynamic> json) =>
-      _$RoundStatsFromJson(json);
+  // Factory constructor for creating an instance of RoundStats from JSON
+  factory RoundStats.fromJson(Map<String, dynamic> json) => RoundStats(
+        totalStrokes: json['totalStrokes'] as int? ??
+            0, // Hanterar null-värden och sätter ett standardvärde om null
+        differenceFromPar: json['differenceFromPar'] as int? ??
+            0, // Hanterar null-värden och sätter ett standardvärde om null
+      );
+
+  // Convert RoundStats instance to JSON
   Map<String, dynamic> toJson() => _$RoundStatsToJson(this);
 }

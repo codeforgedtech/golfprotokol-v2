@@ -13,10 +13,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Course> _courses = [];
+  List<Course> _allCourses = []; // Stores the full list of courses
+  List<Course> _filteredCourses = []; // Stores the filtered list of courses
   bool _isLoading = true;
   ScrollController _scrollController = ScrollController();
   List<String> _alphabet = [];
+  String? _selectedLetter; // State variable to store the selected letter
 
   @override
   void initState() {
@@ -28,9 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
     DataService dataService = DataService();
     List<Course> courses = await dataService.loadCourses();
     setState(() {
-      _courses = courses;
+      _allCourses = courses;
+      _filteredCourses = courses;
       _isLoading = false;
       _alphabet = _generateAlphabet(courses);
+      _alphabet.sort(); // Ensure alphabetical order
     });
   }
 
@@ -43,6 +47,32 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     List<String> sortedLetters = letters.toList()..sort();
     return sortedLetters;
+  }
+
+  void _filterCourses(String? letter) {
+    setState(() {
+      if (letter == null || letter == 'All') {
+        _filteredCourses = _allCourses;
+      } else {
+        _filteredCourses = _allCourses
+            .where((course) =>
+                course.name.isNotEmpty &&
+                course.name[0].toUpperCase() == letter)
+            .toList();
+      }
+    });
+
+    // Scroll to the top of the filtered list
+    _scrollController.animateTo(
+      0.0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onLetterSelected(String letter) {
+    _selectedLetter = letter;
+    _filterCourses(letter);
   }
 
   void _onCourseTap(Course course) {
@@ -81,21 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _scrollToLetter(String letter) {
-    for (int i = 0; i < _courses.length; i++) {
-      if (_courses[i].name.isNotEmpty &&
-          _courses[i].name[0].toUpperCase() == letter) {
-        _scrollController.animateTo(
-          _scrollController.position.minScrollExtent +
-              i * 80.0, // Adjust multiplier based on item height
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-        break;
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,44 +136,54 @@ class _HomeScreenState extends State<HomeScreen> {
           // Courses List
           Padding(
             padding: const EdgeInsets.only(
-                left: 60.0), // Make room for the alphabet list
+                left: 70.0,
+                top: 60.0), // Adjusted padding to move the list down
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     controller: _scrollController,
-                    itemCount: _courses.length,
+                    itemCount: _filteredCourses.length,
                     itemBuilder: (context, index) {
                       return Container(
                         margin: EdgeInsets.only(bottom: 16.0),
                         child: CourseCard(
-                          course: _courses[index],
-                          onTap: () => _onCourseTap(_courses[index]),
+                          course: _filteredCourses[index],
+                          onTap: () => _onCourseTap(_filteredCourses[index]),
                         ),
                       );
                     },
                   ),
           ),
-          // Alphabet List
+          // Horizontal "All" Button
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 40.0, // Height of the horizontal list
+              color: Colors.grey[200],
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                children: [
+                  _buildAlphabetButton('All'),
+                ],
+              ),
+            ),
+          ),
+          // Vertical Alphabet List
           Positioned(
             left: 0,
-            top: 0,
+            top: 40.0, // Start below the horizontal "All" button
             bottom: 0,
             child: Container(
-              width: 50.0, // Width of the alphabet list
+              width: 50.0, // Width of the vertical list
               color: Colors.grey[200],
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: _alphabet.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      _alphabet[index],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    onTap: () => _scrollToLetter(_alphabet[index]),
-                  );
+                  return _buildAlphabetButton(_alphabet[index]);
                 },
               ),
             ),
@@ -171,6 +196,32 @@ class _HomeScreenState extends State<HomeScreen> {
         foregroundColor: Colors.white,
         tooltip: 'Om Bangolf Protokoll',
         child: Icon(Icons.question_mark_outlined),
+      ),
+    );
+  }
+
+  Widget _buildAlphabetButton(String letter) {
+    return GestureDetector(
+      onTap: () => _onLetterSelected(letter),
+      child: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+        decoration: BoxDecoration(
+          color: _selectedLetter == letter
+              ? Colors.transparent
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Text(
+          letter,
+          style: TextStyle(
+            fontSize:
+                letter == 'All' ? 12.0 : 14.0, // Larger font size for "All"
+            fontWeight: FontWeight.bold,
+            color: _selectedLetter == letter ? Colors.green : Colors.black,
+          ),
+        ),
       ),
     );
   }

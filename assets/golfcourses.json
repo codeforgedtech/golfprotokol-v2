@@ -1,63 +1,9 @@
 [
   {
-    "id": "1",
-    "name": "Hofors, Folketshus",
-    "location": "Hofors, Gästriksland",
-    "hole":"18",
-    "holes": [
-      {"number": 1, "name": "Mittkulle"},
-      {"number": 2, "name": "Tvåport"},
-      {"number": 3, "name": "Dropp"},
-      {"number": 4, "name": "Håll i backe med green"},
-      {"number": 5, "name": "Synvilla"},
-      {"number": 6, "name": "Örkelljunga"},
-      {"number": 7, "name": "Vinkel"},
-      {"number": 8, "name": "Enport i kulle"},
-      {"number": 9, "name": "Vertikal"},
-      {"number": 10, "name": "Gentleman"},
-      {"number": 11, "name": "Lådbana"},
-      {"number": 12, "name": "Sidospel"},
-      {"number": 13, "name": "Tysk klack"},
-      {"number": 14, "name": "Enport"},
-      {"number": 15, "name": "Målvakt"},
-      {"number": 16, "name": "Vallgrav"},
-      {"number": 17, "name": "Dosering"},
-      {"number": 18, "name": "Inslag"}
-    ],
-    "par": 55
-  },
-  {
-    "id": "2",
-    "name": "Olofström, Holjepark",
-    "location": "Olofström, Blekinge",
-    "hole":"18",
-    "holes": [
-      {"number": 1, "name": "Tvillingport"},
-      {"number": 2, "name": "Uppsamlare"},
-      {"number": 3, "name": "Dosering"},
-      {"number": 4, "name": "Hål i backe"},
-      {"number": 5, "name": "Rännan"},
-      {"number": 6, "name": "Spång"},
-      {"number": 7, "name": "Vinkel"},
-      {"number": 8, "name": "Alternativ brevlåda"},
-      {"number": 9, "name": "Puckel med ribba"},
-      {"number": 10, "name": "Fiskben"},
-      {"number": 11, "name": "Vaggan"},
-      {"number": 12, "name": "Lådbana"},
-      {"number": 13, "name": "Sidospel"},
-      {"number": 14, "name": "Tysk klack"},
-      {"number": 15, "name": "Enportare"},
-      {"number": 16, "name": "Örkelljunga"},
-      {"number": 17, "name": "Synvilla"},
-      {"number": 18, "name": "Dropp"}
-    ],
-    "par": 53
-  },
-  {
     "id": "3",
     "name": "Asarum Filt",
     "location": "Asarum, Blekinge",
-    "hole":"18",
+    "hole": "18",
     "holes": [
       {"number": 1, "name": "Lådbana"},
       {"number": 2, "name": "Spång"},
@@ -84,7 +30,7 @@
     "id": "4",
     "name": "Asarum EB",
     "location": "Asarum, Blekinge",
-    "hole":"18",
+    "hole": "18",
     "holes": [
       {"number": 1, "name": "Tetra"},
       {"number": 2, "name": "Snäcka"},
@@ -108,28 +54,10 @@
     "par": 51
   },
   {
-    "id": "5",
-    "name": "Falkenberg, Skrea Strand 9 hål",
-    "location": "Falkenberg, Halland",
-    "hole":"9",
-    "holes": [
-      {"number": 1, "name": "Bulorna"},
-      {"number": 2, "name": "Badbaljan"},
-      {"number": 3, "name": "Loopen"},
-      {"number": 4, "name": "Brunnen"},
-      {"number": 5, "name": "Dubbelgrinet"},
-      {"number": 6, "name": "Springan"},
-      {"number": 7, "name": "Vågen"},
-      {"number": 8, "name": "Doceringen"},
-      {"number": 9, "name": "Slutningen"}
-    ],
-    "par": 18
-  },
-  {
     "id": "6",
     "name": "Björnlunda,Golfbaren",
     "location": "Gnesta, Södermanland",
-    "hole":"18",
+    "hole": "18",
     "holes": [
       {"number": 1, "name": "Kyrka"},
       {"number": 2, "name": "Dosering"},
@@ -153,10 +81,136 @@
     "par": 54
   },
   {
+    "id": "9",
+    "name": "Eskilstuna, MunktellArenan EB",
+    "location": "Eskilstuna, Södermanland",
+    "hole": "18",
+    "holes": [
+      {"number": 1, "name": "Mittkulle"},
+      {"number": 2, "name": "Blixt"},
+      {"number": 3, "name": "Passagen"},
+      {"number": 4, "name": "Kanon"},
+      {"number": 5, "name": "Mushål"},
+      {"number": 6, "name": "Salto"},
+      {"number": 7, "name": "Vinkel"},
+      {"number": 8, "name": "Brygga"},
+      {"number": 9, "name": "Mosbricka"},
+      {"number": 10, "name": "Hoven"},
+      {"number": 11, "name": "Klacken"},
+      {"number": 12, "name": "Hål i backe"},
+      {"number": 13, "name": "Pinnbana"},
+      {"number": 14, "name": "Liggande konen"},
+      {"number": 15, "name": "Tetror"},
+      {"number": 16, "name": "Snäcka"},
+      {"number": 17, "name": "Fönster"},
+      {"number": 18, "name": "Labyrint"}
+    ],
+    "par": 47
+  },
+  {
+    "id": "9",
+    "name": "Eskilstuna, MunktellArenan Filt",
+    "location": "Eskilstuna, Södermanland",
+    "hole": "18",
+    "holes": [
+      {"number": 1, "name": "Tvåportare"},
+      {"number": 2, "name": "Håll i backe utan green"},
+      {"number": 3, "name": "Dosering"},
+      {"number": 4, "name": "Vallgrav"},
+      {"number": 5, "name": "Lådbana"},
+      {"number": 6, "name": "Vagga utan green"},
+      {"number": 7, "name": "Gentleman utan green"},
+      {"number": 8, "name": "Synvilla"},
+      {"number": 9, "name": "Målvakt"},
+      {"number": 10, "name": "Möllbergare"},
+      {"number": 11, "name": "Ränna"},
+      {"number": 12, "name": "Fisk"},
+      {"number": 13, "name": "Tysk klack"},
+      {"number": 14, "name": "Stordropp med spiklåda"},
+      {"number": 15, "name": "Springa utan green"},
+      {"number": 16, "name": "Örkelljunga"},
+      {"number": 17, "name": "Spång"},
+      {"number": 18, "name": "Inslag"}
+    ],
+    "par": 46
+  },
+  {
+    "id": "5",
+    "name": "Falkenberg, Skrea Strand 9 hål",
+    "location": "Falkenberg, Halland",
+    "hole": "9",
+    "holes": [
+      {"number": 1, "name": "Bulorna"},
+      {"number": 2, "name": "Badbaljan"},
+      {"number": 3, "name": "Loopen"},
+      {"number": 4, "name": "Brunnen"},
+      {"number": 5, "name": "Dubbelgrinet"},
+      {"number": 6, "name": "Springan"},
+      {"number": 7, "name": "Vågen"},
+      {"number": 8, "name": "Doceringen"},
+      {"number": 9, "name": "Slutningen"}
+    ],
+    "par": 18
+  },
+  {
+    "id": "1",
+    "name": "Hofors, Folketshus",
+    "location": "Hofors, Gästriksland",
+    "hole": "18",
+    "holes": [
+      {"number": 1, "name": "Mittkulle"},
+      {"number": 2, "name": "Tvåport"},
+      {"number": 3, "name": "Dropp"},
+      {"number": 4, "name": "Håll i backe med green"},
+      {"number": 5, "name": "Synvilla"},
+      {"number": 6, "name": "Örkelljunga"},
+      {"number": 7, "name": "Vinkel"},
+      {"number": 8, "name": "Enport i kulle"},
+      {"number": 9, "name": "Vertikal"},
+      {"number": 10, "name": "Gentleman"},
+      {"number": 11, "name": "Lådbana"},
+      {"number": 12, "name": "Sidospel"},
+      {"number": 13, "name": "Tysk klack"},
+      {"number": 14, "name": "Enport"},
+      {"number": 15, "name": "Målvakt"},
+      {"number": 16, "name": "Vallgrav"},
+      {"number": 17, "name": "Dosering"},
+      {"number": 18, "name": "Inslag"}
+    ],
+    "par": 55
+  },
+  {
+    "id": "2",
+    "name": "Olofström, Holjepark",
+    "location": "Olofström, Blekinge",
+    "hole": "18",
+    "holes": [
+      {"number": 1, "name": "Tvillingport"},
+      {"number": 2, "name": "Uppsamlare"},
+      {"number": 3, "name": "Dosering"},
+      {"number": 4, "name": "Hål i backe"},
+      {"number": 5, "name": "Rännan"},
+      {"number": 6, "name": "Spång"},
+      {"number": 7, "name": "Vinkel"},
+      {"number": 8, "name": "Alternativ brevlåda"},
+      {"number": 9, "name": "Puckel med ribba"},
+      {"number": 10, "name": "Fiskben"},
+      {"number": 11, "name": "Vaggan"},
+      {"number": 12, "name": "Lådbana"},
+      {"number": 13, "name": "Sidospel"},
+      {"number": 14, "name": "Tysk klack"},
+      {"number": 15, "name": "Enportare"},
+      {"number": 16, "name": "Örkelljunga"},
+      {"number": 17, "name": "Synvilla"},
+      {"number": 18, "name": "Dropp"}
+    ],
+    "par": 53
+  },
+  {
     "id": "7",
     "name": "Övriga banor 18 hål",
     "location": "",
-    "hole":"18",
+    "hole": "18",
     "holes": [
       {"number": 1, "name": "Bana 1"},
       {"number": 2, "name": "Bana 2"},
@@ -177,13 +231,13 @@
       {"number": 17, "name": "Bana 17"},
       {"number": 18, "name": "Bana 18"}
     ],
-    "par":54
+    "par": 54
   },
   {
     "id": "8",
     "name": "Övriga banor 9 hål",
     "location": "",
-    "hole":"9",
+    "hole": "9",
     "holes": [
       {"number": 1, "name": "Bana 1"},
       {"number": 2, "name": "Bana 2"},
@@ -194,8 +248,10 @@
       {"number": 7, "name": "Bana 7"},
       {"number": 8, "name": "Bana 8"},
       {"number": 9, "name": "Bana 9"}
-
     ],
-    "par":27
-  }
+    "par": 27
+  }  
+
+  
+  
 ]
