@@ -32,79 +32,72 @@ class _TotalStatisticsScreenState extends State<TotalStatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Total Statistik'),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.green,
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.separated(
-              itemCount: _statisticsList.length,
-              separatorBuilder: (context, index) => Divider(thickness: 1),
-              itemBuilder: (context, index) {
-                final statistics = _statisticsList[index];
-                final courseName =
-                    _courseNames[statistics.courseId] ?? 'Unknown Course';
-                return Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        courseName, // Use course name
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      ...statistics.rounds.map((round) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 4.0),
-                          padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+    return _isLoading
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text('Total Statistik'),
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.green,
+            ),
+            body: Center(child: CircularProgressIndicator()),
+          )
+        : DefaultTabController(
+            length: _statisticsList.length,
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text('Total Statistik'),
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                bottom: TabBar(
+                  isScrollable: true,
+                  tabs: _statisticsList.map((statistics) {
+                    return Tab(text: statistics.playerName);
+                  }).toList(),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.black,
+                  indicatorColor: Colors.white,
+                  indicatorWeight: 3.0,
+                ),
+              ),
+              body: TabBarView(
+                children: _statisticsList.map((statistics) {
+                  final courseName =
+                      _courseNames[statistics.courseId] ?? 'Unknown Course';
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListView.builder(
+                      itemCount: statistics.rounds.length,
+                      itemBuilder: (context, index) {
+                        final round = statistics.rounds[index];
+                        return Card(
+                          elevation: 4.0,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
+                            contentPadding: EdgeInsets.all(16.0),
                             title: Text(
-                              '${statistics.playerName}',
+                              '$courseName - Runda ${index + 1}',
                               style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w600),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             subtitle: Text(
                               'Antal slag: ${round.totalStrokes}\nDiff från par: ${round.differenceFromPar >= 0 ? '+' : ''}${round.differenceFromPar}',
                               style: TextStyle(
+                                fontSize: 14.0,
                                 color: round.differenceFromPar >= 0
                                     ? Colors.red
                                     : Colors.green,
-                                fontSize: 14.0,
                               ),
                             ),
                           ),
                         );
-                      }).toList(),
-                    ],
-                  ),
-                );
-              },
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-    );
+          );
   }
 }

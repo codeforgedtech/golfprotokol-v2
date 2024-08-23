@@ -124,5 +124,86 @@
       {"number": 9, "name": "Slutningen"}
     ],
     "par": 18
+  },
+  {
+    "id": "6",
+    "name": "Björnlunda,Golfbaren",
+    "location": "Gnesta, Södermanland",
+    "hole":"18",
+    "holes": [
+      {"number": 1, "name": "Kyrka"},
+      {"number": 2, "name": "Dosering"},
+      {"number": 3, "name": "Vinkel"},
+      {"number": 4, "name": "Svensk klack"},
+      {"number": 5, "name": "Vagga"},
+      {"number": 6, "name": "Sidspel"},
+      {"number": 7, "name": "Lådbana"},
+      {"number": 8, "name": "Mittkulle"},
+      {"number": 9, "name": "Vertikal"},
+      {"number": 10, "name": "Enport i backe"},
+      {"number": 11, "name": "Synvilla"},
+      {"number": 12, "name": "Spångdropp"},
+      {"number": 13, "name": "Fiskeben"},
+      {"number": 14, "name": "Gentleman"},
+      {"number": 15, "name": "Hål i backe"},
+      {"number": 16, "name": "Spång"},
+      {"number": 17, "name": "Örkelljunga"},
+      {"number": 18, "name": "Inslag"}
+    ],
+    "par": 54
+  },
+  {
+    "id": "7",
+    "name": "Övriga banor 18 hål",
+    "location": "",
+    "hole":"18",
+    "holes": [
+      {"number": 1, "name": "Bana 1"},
+      {"number": 2, "name": "Bana 2"},
+      {"number": 3, "name": "Bana 3"},
+      {"number": 4, "name": "Bana 4"},
+      {"number": 5, "name": "Bana 5"},
+      {"number": 6, "name": "Bana 6"},
+      {"number": 7, "name": "Bana 7"},
+      {"number": 8, "name": "Bana 8"},
+      {"number": 9, "name": "Bana 9"},
+      {"number": 10, "name": "Bana 10"},
+      {"number": 11, "name": "Bana 11"},
+      {"number": 12, "name": "Bana 12"},
+      {"number": 13, "name": "Bana 13"},
+      {"number": 14, "name": "Bana 14"},
+      {"number": 15, "name": "Bana 15"},
+      {"number": 16, "name": "Bana 16"},
+      {"number": 17, "name": "Bana 17"},
+      {"number": 18, "name": "Bana 18"}
+    ],
+    "par":54
+  },
+  {
+    "id": "8",
+    "name": "Övriga banor 9 hål",
+    "location": "",
+    "hole":"9",
+    "holes": [
+      {"number": 1, "name": "Bana 1"},
+      {"number": 2, "name": "Bana 2"},
+      {"number": 3, "name": "Bana 3"},
+      {"number": 4, "name": "Bana 4"},
+      {"number": 5, "name": "Bana 5"},
+      {"number": 6, "name": "Bana 6"},
+      {"number": 7, "name": "Bana 7"},
+      {"number": 8, "name": "Bana 8"},
+      {"number": 9, "name": "Bana 9"},
+      {"number": 10, "name": "Bana 10"},
+      {"number": 11, "name": "Bana 11"},
+      {"number": 12, "name": "Bana 12"},
+      {"number": 13, "name": "Bana 13"},
+      {"number": 14, "name": "Bana 14"},
+      {"number": 15, "name": "Bana 15"},
+      {"number": 16, "name": "Bana 16"},
+      {"number": 17, "name": "Bana 17"},
+      {"number": 18, "name": "Bana 18"}
+    ],
+    "par":27
   }
 ]
