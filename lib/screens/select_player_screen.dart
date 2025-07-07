@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../services/player_service.dart';
-import 'hole_screen.dart'; // Importera HoleScreen som visar hålen och poäng
+import 'hole_screen.dart';
 
 class SelectPlayerScreen extends StatefulWidget {
   final Course course;
@@ -15,6 +15,7 @@ class SelectPlayerScreen extends StatefulWidget {
 class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
   List<String> _players = [];
   String _newPlayerName = '';
+  int _selectedRounds = 1; // Standard: 1 varv
 
   @override
   void initState() {
@@ -44,13 +45,8 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
     _loadPlayers();
   }
 
-  void _onPlayerSelected(String player) {
-    // Om nödvändigt, hantera vad som händer när en spelare väljs
-  }
-
   void _goToHoleScreen() {
     if (_players.isEmpty) {
-      // Visa ett meddelande om inga spelare är valda
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Välj minst en spelare.'),
@@ -65,6 +61,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
         builder: (context) => HoleScreen(
           course: widget.course,
           playerNames: _players,
+          roundCount: _selectedRounds,
         ),
       ),
     );
@@ -76,7 +73,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
       appBar: AppBar(
         title: Text('${widget.course.name}'),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.green, // Match the color with the theme
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -88,7 +85,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800], // Dark green text
+                color: Colors.green[800],
               ),
             ),
             SizedBox(height: 16.0),
@@ -101,7 +98,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       filled: true,
-                      fillColor: Colors.green[50], // Light green background
+                      fillColor: Colors.green[50],
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -116,12 +113,11 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                   onPressed: _addPlayer,
                   child: Text('Lägg till'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, // Green background color
-                    foregroundColor: Colors.white, // White text color
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Rounded corners
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     textStyle: TextStyle(fontSize: 16.0),
                   ),
@@ -130,11 +126,48 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
             ),
             SizedBox(height: 16.0),
             Text(
+              'Antal varv:',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[800],
+              ),
+            ),
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green.shade700, width: 1.5),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<int>(
+                  value: _selectedRounds,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedRounds = value;
+                      });
+                    }
+                  },
+                  items: [1, 2, 3].map((round) {
+                    return DropdownMenuItem(
+                      value: round,
+                      child: Text('$round varv', style: TextStyle(fontSize: 16)),
+                    );
+                  }).toList(),
+                  isExpanded: true,
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.green.shade700),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text(
               'Spelare:',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800], // Dark green text
+                color: Colors.green[800],
               ),
             ),
             SizedBox(height: 8.0),
@@ -145,7 +178,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                   final player = _players[index];
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 4.0, // Slightly raised card
+                    elevation: 4.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -159,7 +192,6 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () => _removePlayer(player),
                       ),
-                      onTap: () => _onPlayerSelected(player),
                     ),
                   );
                 },
@@ -170,12 +202,12 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
               onPressed: _goToHoleScreen,
               child: Text('Spela'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Green background color
-                foregroundColor: Colors.white, // White text color
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: TextStyle(fontSize: 18.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
             ),
@@ -185,3 +217,4 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
     );
   }
 }
+

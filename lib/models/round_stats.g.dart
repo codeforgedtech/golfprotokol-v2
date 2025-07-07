@@ -7,12 +7,16 @@ part of 'round_stats.dart';
 // **************************************************************************
 
 RoundStats _$RoundStatsFromJson(Map<String, dynamic> json) => RoundStats(
-      totalScore: (json['totalScore'] as num).toInt(),
-      scoreDifferenceFromPar: (json['scoreDifferenceFromPar'] as num).toInt(),
+      totalStrokes: (json['totalStrokes'] as num).toInt(),
+      differenceFromPar: (json['differenceFromPar'] as num).toInt(),
+      courseId: json['courseId'] as String,
+      date: DateTime.parse(json['date'] as String),
     );
 
 Map<String, dynamic> _$RoundStatsToJson(RoundStats instance) =>
     <String, dynamic>{
-      'totalScore': instance.totalScore,
-      'scoreDifferenceFromPar': instance.scoreDifferenceFromPar,
+      'totalStrokes': instance.totalStrokes,
+      'differenceFromPar': instance.differenceFromPar,
+      'courseId': instance.courseId,
+      'date': instance.date.toIso8601String(),
     };

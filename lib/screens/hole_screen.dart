@@ -8,81 +8,104 @@ import 'statistics_screen.dart';
 class HoleScreen extends StatefulWidget {
   final Course course;
   final List<String> playerNames;
+  final int roundCount;
 
-  HoleScreen({required this.course, required this.playerNames});
+  HoleScreen({
+    required this.course,
+    required this.playerNames,
+    required this.roundCount,
+  });
 
   @override
   _HoleScreenState createState() => _HoleScreenState();
 }
 
 class _HoleScreenState extends State<HoleScreen> {
-  List<List<int?>> _selectedScores = [];
+  int _currentRound = 1;
+  late List<String> _playerOrder;
+  Map<String, List<List<int?>>> _selectedScores = {};
   List<Statistics> _statisticsList = [];
+  late DateTime _roundStartTime;
 
   @override
   void initState() {
     super.initState();
-    _selectedScores = List.generate(
-      widget.playerNames.length,
-      (index) => List.generate(
-        widget.course.holes.length,
-        (holeIndex) => null,
-      ),
-    );
+    _playerOrder = List.from(widget.playerNames);
+    _roundStartTime = DateTime.now();
+
+    for (var player in _playerOrder) {
+      _selectedScores[player] = List.generate(
+        widget.roundCount,
+        (_) => List.generate(widget.course.holes.length, (_) => null),
+      );
+    }
+
     _loadStatistics();
   }
 
   Future<void> _loadStatistics() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     for (String playerName in widget.playerNames) {
-      String? statisticsJson =
-          prefs.getString('${widget.course.id}_$playerName');
-      if (statisticsJson != null) {
-        Statistics statistics = Statistics.fromJson(jsonDecode(statisticsJson));
-        _statisticsList.add(statistics);
-      } else {
-        _statisticsList.add(Statistics(
-          courseId: widget.course.id,
-          playerName: playerName,
-          rounds: [],
-        ));
-      }
+      // Här laddar vi inte längre en specifik omgång, utan en tom lista för att lägga till i _statisticsList
+      _statisticsList.add(Statistics(
+        courseId: widget.course.id,
+        courseName: widget.course.name,
+        holesCount: widget.course.holes.length,
+        playerName: playerName,
+        rounds: [],
+        date: _roundStartTime,
+      ));
     }
   }
 
-  Future<void> _saveStatistics() async {
-    bool allFieldsFilled = _selectedScores.every(
-      (playerScores) => playerScores.every((score) => score != null),
-    );
+  Future<void> _saveRound() async {
+    bool allFilled = _playerOrder.every((player) =>
+        _selectedScores[player]![_currentRound - 1].every((score) => score != null));
 
-    if (!allFieldsFilled) {
+    if (!allFilled) {
       _showIncompleteRoundAlert();
       return;
     }
 
+    if (_currentRound == widget.roundCount) {
+      await _saveStatistics();
+    } else {
+      setState(() {
+        _currentRound++;
+        if (widget.roundCount == 3 && _currentRound == 3) {
+          _sortPlayersByScoreAfterTwoRounds();
+          _showSnackbar('Varv 3 spelas i Ludvika. Turordning ändrad.');
+        }
+      });
+    }
+  }
+
+  Future<void> _saveStatistics() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    for (int playerIndex = 0;
-        playerIndex < widget.playerNames.length;
-        playerIndex++) {
-      List<int> scores =
-          _selectedScores[playerIndex].map((score) => score ?? 0).toList();
-      int par = widget.course.par;
+    for (var i = 0; i < _playerOrder.length; i++) {
+      final player = _playerOrder[i];
+      final allRounds = _selectedScores[player]!
+          .map((round) => round.map((s) => s ?? 0).toList())
+          .toList();
 
-      _statisticsList[playerIndex].addRound(scores, par);
+      for (var roundScores in allRounds) {
+        _statisticsList[i].addRound(roundScores, widget.course.par);
+      }
 
-      String statisticsJson = jsonEncode(_statisticsList[playerIndex].toJson());
-      prefs.setString('${widget.course.id}_${widget.playerNames[playerIndex]}',
-          statisticsJson);
+      String statisticsJson = jsonEncode(_statisticsList[i].toJson());
 
-      print('Saving stats for ${widget.playerNames[playerIndex]}: $scores');
+      // Nyckel inkluderar starttid för att spara unikt per omgång
+      String key = '${widget.course.id}_${player}_${_roundStartTime.toIso8601String()}';
+
+      await prefs.setString(key, statisticsJson);
     }
 
     _navigateToStatistics();
   }
 
   void _navigateToStatistics() {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => StatisticsScreen(statisticsList: _statisticsList),
@@ -90,36 +113,45 @@ class _HoleScreenState extends State<HoleScreen> {
     );
   }
 
+  void _sortPlayersByScoreAfterTwoRounds() {
+    Map<String, int> totalScores = {};
+    for (var player in _playerOrder) {
+      final round1 = _selectedScores[player]![0].map((s) => s ?? 0);
+      final round2 = _selectedScores[player]![1].map((s) => s ?? 0);
+      totalScores[player] = round1.reduce((a, b) => a + b) + round2.reduce((a, b) => a + b);
+    }
+    _playerOrder.sort((a, b) => totalScores[a]!.compareTo(totalScores[b]!));
+  }
+
   void _showIncompleteRoundAlert() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Ofullständig runda'),
-          content: Text('Vänligen fyll i alla poäng innan du sparar.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: Text('Ofullständig runda'),
+        content: Text('Fyll i alla poäng innan du fortsätter.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('OK')),
+        ],
+      ),
     );
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.course.name}'),
+        title: Text(_currentRound == 3 && widget.roundCount == 3
+            ? 'Varv $_currentRound: Ludvika'
+            : 'Varv $_currentRound: ${widget.course.name}'),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.green, // Match the color with the theme
+        backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: Icon(Icons.bar_chart), // Icon for statistics
+            icon: Icon(Icons.bar_chart),
             onPressed: _navigateToStatistics,
             tooltip: 'Visa Statistik',
           ),
@@ -142,55 +174,51 @@ class _HoleScreenState extends State<HoleScreen> {
                     Text(
                       'Hål ${hole.number}: ${hole.name}',
                       style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
                     ),
                     SizedBox(height: 8),
                     Row(
-                      children: List.generate(
-                        widget.playerNames.length,
-                        (playerIndex) => Expanded(
+                      children: _playerOrder.map((player) {
+                        return Expanded(
                           child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
                             child: InputDecorator(
                               decoration: InputDecoration(
-                                labelText: widget.playerNames[playerIndex],
+                                labelText: player,
                                 border: OutlineInputBorder(),
                               ),
-                              isEmpty: _selectedScores[playerIndex]
-                                      [holeIndex] ==
-                                  null,
+                              isEmpty:
+                                  _selectedScores[player]![_currentRound - 1]
+                                          [holeIndex] ==
+                                      null,
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<int>(
-                                  value: _selectedScores[playerIndex]
+                                  value: _selectedScores[player]![_currentRound - 1]
                                       [holeIndex],
                                   isExpanded: true,
-                                  hint: Text(''),
                                   onChanged: (int? newValue) {
                                     setState(() {
-                                      _selectedScores[playerIndex][holeIndex] =
-                                          newValue;
+                                      _selectedScores[player]![_currentRound - 1]
+                                          [holeIndex] = newValue;
                                     });
                                   },
                                   items: List.generate(
-                                    7,
-                                    (index) => DropdownMenuItem<int>(
-                                      value: index + 1,
-                                      child:
-                                          Center(child: Text('${index + 1}')),
-                                    ),
-                                  ),
+                                      7,
+                                      (i) => DropdownMenuItem(
+                                          value: i + 1,
+                                          child: Center(
+                                              child:
+                                                  Text('${i + 1}')))),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }).toList(),
                     ),
-                    SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -199,12 +227,16 @@ class _HoleScreenState extends State<HoleScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _saveStatistics,
+        onPressed: _saveRound,
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        child: Icon(Icons.save),
-        tooltip: 'Spara Statistik',
+        child: Icon(Icons.navigate_next),
+        tooltip: _currentRound == widget.roundCount
+            ? 'Spara Statistik'
+            : 'Nästa Varv',
       ),
     );
   }
 }
+
+

@@ -1,18 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http; // Import for HTTP requests
+import 'package:http/http.dart' as http;
 import '../models/course.dart';
 import '../models/statistics.dart';
 
 class DataService {
   Future<List<Course>> loadCourses() async {
-    // Load the JSON file from the assets
-    final String response =
-        await rootBundle.loadString('assets/golfcourses.json');
-    // Decode the JSON data
+    final String response = await rootBundle.loadString('assets/golfcourses.json');
     final data = json.decode(response);
-    // Convert the JSON list to a list of Course objects
     return (data as List).map((json) => Course.fromJson(json)).toList();
   }
 
@@ -30,7 +26,6 @@ class DataService {
 
     for (String key in keys) {
       if (key.contains('_')) {
-        // assuming your keys are in the format 'courseId_playerName'
         String? statisticsJson = prefs.getString(key);
         if (statisticsJson != null) {
           Map<String, dynamic> jsonMap = json.decode(statisticsJson);
@@ -42,16 +37,13 @@ class DataService {
     return statisticsList;
   }
 
-  // Load courses and cache them
   Future<Map<String, String>> loadCoursesMap() async {
     List<Course> courses = await loadCourses();
     return {for (var course in courses) course.id: course.name};
   }
 
-  // Submit a new course tip and send it to Formspree
   Future<void> submitCourseTip(String courseName, String location) async {
-    final url =
-        'https://formspree.io/f/mqazgped'; // Replace with your Formspree form ID
+    final url = 'https://formspree.io/f/mqazgped';
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -68,7 +60,6 @@ class DataService {
       throw Exception('Failed to submit course tip');
     }
 
-    // Optionally save locally as well
     final prefs = await SharedPreferences.getInstance();
     final tipKey = 'course_tip_${DateTime.now().millisecondsSinceEpoch}';
     final tipData = {
@@ -79,7 +70,6 @@ class DataService {
     await prefs.setString(tipKey, tipJson);
   }
 
-  // Retrieve all course tips
   Future<List<Map<String, dynamic>>> getAllCourseTips() async {
     final prefs = await SharedPreferences.getInstance();
     Set<String> keys = prefs.getKeys();
@@ -96,4 +86,25 @@ class DataService {
     }
     return courseTips;
   }
+
+  /// ✅ IMPLEMENTERAD: Hämta kurs med ID
+  Future<Course?> getCourseById(String courseId) async {
+    List<Course> courses = await loadCourses();
+    try {
+      return courses.firstWhere((course) => course.id == courseId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// ✅ IMPLEMENTERAD: Hämta kurs med namn
+  Future<Course?> getCourseByName(String courseName) async {
+    List<Course> courses = await loadCourses();
+    try {
+      return courses.firstWhere((course) => course.name == courseName);
+    } catch (e) {
+      return null;
+    }
+  }
 }
+
